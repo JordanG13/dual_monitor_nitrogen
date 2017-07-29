@@ -1,0 +1,6 @@
+#!/bin/bash
+
+DIRECTORY=$PWD
+
+$PWD/dual_monitor_nitrogen > $PWD/dmn_log.txt 2>&1 &
+exit

@@ -1,0 +1,9 @@
+<RCC>
+    <qresource prefix="/icons">
+        <file>logo.png</file>
+    </qresource>
+    <qresource prefix="/script">
+        <file>dual_monitor_nitrogen</file>
+        <file>runner</file>
+    </qresource>
+</RCC>
