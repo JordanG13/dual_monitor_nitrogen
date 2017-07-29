@@ -1,6 +1,10 @@
 # Dual Monitor Nitrogen
 A nitrogen script that allows seperate wallpapers on dual monitors
 
+### Features
+- Cycles through wallpapers every 5 minutes
+- Prioritizes new wallpapers so you won't see old ones
+
 ## Requirements
 - inotifywait
 - xrandr
