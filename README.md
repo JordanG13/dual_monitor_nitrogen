@@ -7,6 +7,8 @@ A nitrogen script that allows seperate wallpapers on dual monitors
 
 ## Requirements
 - inotifywait
+- nitrogen (duh)
+- QT5
 - xrandr
 - (optional) variety, to download new wallpapers
 
