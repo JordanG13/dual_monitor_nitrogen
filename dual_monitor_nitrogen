@@ -17,8 +17,6 @@ if [ $? -ne 0 ]; then
 	exit;
 fi
 
-monitorDirs &
-
 while [ true ]
 do
 	# check if 1 monitor is connected
