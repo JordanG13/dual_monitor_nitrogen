@@ -12,76 +12,34 @@ for pid in `pidof -x "dual_monitor_nitrogen"`;
 ping -q -c 1 -W 1 google.com > /dev/null 2>&1
 
 if [ $? -ne 0 ]; then
+	echo "No internet connection." 2>&1
+
 	exit;
 fi
-
-# Select random wallpaper for each screen, by fiddling with the configuration file for nitrogen.
-
-CONFIG="$HOME/.config/nitrogen/bg-saved.cfg" # Replace this with whatever the nitrogen config file is.
-WALLPAPERDIR="$HOME/.config/variety/Downloaded"
-WALLPAPERFAV="$HOME/.config/variety/Favorites"
-GNOMEDIR="/usr/share/backgrounds/gnome"
-
-find $WALLPAPERDIR $WALLPAPERFAV $GNOMEDIR -name '*' -exec file {} \; | grep -o -P '^.+: \w+ image' | cut -d':' -f1 > $HOME/.config/nitrogen/wallpaperlist.txt;
-
-WALLPAPERLIST="$HOME/.config/nitrogen/wallpaperlist.txt"
-
-function setwallpaper {
-	# Modify the nitrogen configuration file (default location set in $CONFIG).
-	# $1: Line to modify
-	WALLPAPER=$(shuf -n 1 $WALLPAPERLIST)
-	sed -i "$1 c\file=$WALLPAPER" $CONFIG
-	
-	# remove used files from list
-	if [[ $(grep "$WALLPAPER" <<< $WALLPAPERLIST) ]]; then
-		grep -Fv "$WALLPAPER" <<< $WALLPAPERLIST > $WALLPAPERLIST;
-		
-		WALLPAPER=$(shuf -n 1 $WALLPAPERLIST)
-		sed -i "$1 c\file=$WALLPAPER" $CONFIG
-	fi
-}
-
-function monitorDirs {
-	# monitor for new files and add them to list
-	inotifywait -m -q -r -e create -o "/dev/null" --format "%w%f" $WALLPAPERDIR | while read newf
-	do
-		if [[ $(find $WALLPAPERDIR -wholename "$newf" -exec file {} \; | grep -o -P '^.+: \w+ image' | cut -d':' -f1) ]]; then
-			echo $newf >> $WALLPAPERLIST;
-		fi
-	done
-}
 
 monitorDirs &
 
 while [ true ]
 do
-	# check if 1 monitor is plugged in
+	# check if 1 monitor is connected
 	if [[ $(xrandr | grep -wc connected) -le 1 ]]; then
 		if [[ $(gsettings get org.nemo.desktop show-desktop-icons) -eq false ]]; then
 			gsettings set org.nemo.desktop show-desktop-icons true;
 		fi
 		
-		setwallpaper 2 &
-
-		# Refresh Nitrogen with new wallpaper.
-		nitrogen --set-zoom --restore;
+nitrogen --set-zoom --random;
 
 		sleep 5m;
 		continue 2;
 	fi
 
-	# 2 monitors
+	# 2 monitors; need to disable show desktop icons for nitrogen to work
 	if [[ $(xrandr | grep -wc connected) -eq 2 ]]; then
 		if [[ $(gsettings get org.nemo.desktop show-desktop-icons) -eq true ]]; then
 			gsettings set org.nemo.desktop show-desktop-icons false;
 		fi
 		
-		setwallpaper 2 &
-	
-		setwallpaper 7 &
-
-		# Refresh Nitrogen with new wallpaper.
-		nitrogen --set-zoom --restore;
+nitrogen --set-zoom --random;
 	
 		sleep 5m;
 		continue 2;
