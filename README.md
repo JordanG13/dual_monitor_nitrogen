@@ -6,7 +6,7 @@ A nitrogen script that allows seperate wallpapers on dual monitors
 - Selects random wallpapers in selected directories
 
 ## Requirements
-- nitrogen
+- nitrogen (use my nitrogen build if using nemo desktop/cinnamon)
 - (optional) variety, to download new wallpapers
 
 # Instructions
